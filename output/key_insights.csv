@@ -1,0 +1,8 @@
+insight
+"The dataset contains 8,807 records, which is above the required 3,000-record minimum."
+"Movies dominate the catalog with 6,131 titles, compared with 2,676 TV shows."
+"The United States is the leading primary country with 3,211 titles, followed by India with 1,008."
+"The most common genre label is International Movies, appearing in 2,752 records."
+"The most frequent content rating is TV-MA, with 3,207 titles."
+"Netflix additions increased strongly after 2015, showing rapid catalog expansion in the later years of the dataset."
+"Preprocessing improved usability by replacing blank categorical values, extracting clean date parts, and creating analysis-friendly country, genre, and duration fields."

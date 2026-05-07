@@ -1,0 +1,617 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Netflix Data Analysis and Visualization Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18212f;
+      --muted: #607083;
+      --line: #d9e1ea;
+      --red: #d81f26;
+      --blue: #155e75;
+      --green: #2f7d4f;
+      --bg: #f7f9fb;
+      --panel: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 34px 48px;
+      border-bottom: 6px solid var(--red);
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 34px 24px 56px; }
+    h1, h2, h3 { margin: 0 0 14px; line-height: 1.2; }
+    h1 { font-size: 34px; }
+    h2 { font-size: 23px; padding-top: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    h3 { font-size: 18px; color: var(--blue); }
+    p { margin: 0 0 14px; }
+    .subtitle { color: #d3dae6; max-width: 860px; }
+    .grid { display: grid; gap: 16px; }
+    .metrics { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 22px 0; }
+    .metric, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .metric strong { display: block; font-size: 28px; color: var(--red); }
+    .metric span { color: var(--muted); font-size: 14px; }
+    .two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 22px; background: white; }
+    th, td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef3f7; }
+    img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 8px; background: white; }
+    .chart { margin: 18px 0 30px; }
+    .small { color: var(--muted); font-size: 13px; }
+    ul { margin-top: 8px; }
+    li { margin-bottom: 8px; }
+    @media print {
+      body { background: white; }
+      header { padding: 24px; }
+      main { padding: 24px; }
+      .panel, .metric, img { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Netflix Data Analysis and Visualization Report</h1>
+    <p class="subtitle">Python mini project using netflix_titles.csv. The report follows the assignment steps: load data, preprocess it, perform analytical operations, generate visualizations, and conclude with findings.</p>
+  </header>
+  <main>
+    <section>
+      <h2>1. Title</h2>
+      <p><strong>Data Analysis and Visualizations on Netflix Titles Dataset</strong></p>
+    </section>
+
+    <section>
+      <h2>2. Step 1: Load The Data</h2>
+      <div class="grid metrics">
+        <div class="metric"><strong>8,807</strong><span>Total records loaded</span></div>
+        <div class="metric"><strong>12</strong><span>Original columns</span></div>
+        <div class="metric"><strong>6,131</strong><span>Movies</span></div>
+        <div class="metric"><strong>2,676</strong><span>TV Shows</span></div>
+      </div>
+      <p>The CSV file contains Netflix catalog records with title type, title name, director, cast, country, date added, release year, rating, duration, genre categories, and description.</p>
+      <table border="1" class="dataframe table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>show_id</th>
+      <th>type</th>
+      <th>title</th>
+      <th>director</th>
+      <th>cast</th>
+      <th>country</th>
+      <th>date_added</th>
+      <th>release_year</th>
+      <th>rating</th>
+      <th>duration</th>
+      <th>listed_in</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>s1</td>
+      <td>Movie</td>
+      <td>Dick Johnson Is Dead</td>
+      <td>Kirsten Johnson</td>
+      <td>NaN</td>
+      <td>United States</td>
+      <td>September 25, 2021</td>
+      <td>2020</td>
+      <td>PG-13</td>
+      <td>90 min</td>
+      <td>Documentaries</td>
+      <td>As her father nears the end of his life, filmmaker Kirsten Johnson stages his death in inventive and comical ways to help them both face the inevitable.</td>
+    </tr>
+    <tr>
+      <td>s2</td>
+      <td>TV Show</td>
+      <td>Blood &amp; Water</td>
+      <td>NaN</td>
+      <td>Ama Qamata, Khosi Ngema, Gail Mabalane, Thabang Molaba, Dillon Windvogel, Natasha Thahane, Arno Greeff, Xolile Tshabalala, Getmore Sithole, Cindy Mahlangu, Ryle De Morny, Greteli Fincham, Sello Maake Ka-Ncube, Odwa Gwanya, Mekaila Mathys, Sandi Schultz, Duane Williams, Shamilla Miller, Patrick Mofokeng</td>
+      <td>South Africa</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>TV-MA</td>
+      <td>2 Seasons</td>
+      <td>International TV Shows, TV Dramas, TV Mysteries</td>
+      <td>After crossing paths at a party, a Cape Town teen sets out to prove whether a private-school swimming star is her sister who was abducted at birth.</td>
+    </tr>
+    <tr>
+      <td>s3</td>
+      <td>TV Show</td>
+      <td>Ganglands</td>
+      <td>Julien Leclercq</td>
+      <td>Sami Bouajila, Tracy Gotoas, Samuel Jouy, Nabiha Akkari, Sofia Lesaffre, Salim Kechiouche, Noureddine Farihi, Geert Van Rampelberg, Bakary Diombera</td>
+      <td>NaN</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>TV-MA</td>
+      <td>1 Season</td>
+      <td>Crime TV Shows, International TV Shows, TV Action &amp; Adventure</td>
+      <td>To protect his family from a powerful drug lord, skilled thief Mehdi and his expert team of robbers are pulled into a violent and deadly turf war.</td>
+    </tr>
+    <tr>
+      <td>s4</td>
+      <td>TV Show</td>
+      <td>Jailbirds New Orleans</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>TV-MA</td>
+      <td>1 Season</td>
+      <td>Docuseries, Reality TV</td>
+      <td>Feuds, flirtations and toilet talk go down among the incarcerated women at the Orleans Justice Center in New Orleans on this gritty reality series.</td>
+    </tr>
+    <tr>
+      <td>s5</td>
+      <td>TV Show</td>
+      <td>Kota Factory</td>
+      <td>NaN</td>
+      <td>Mayur More, Jitendra Kumar, Ranjan Raj, Alam Khan, Ahsaas Channa, Revathi Pillai, Urvi Singh, Arun Kumar</td>
+      <td>India</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>TV-MA</td>
+      <td>2 Seasons</td>
+      <td>International TV Shows, Romantic TV Shows, TV Comedies</td>
+      <td>In a city of coaching centers known to train India’s finest collegiate minds, an earnest but unexceptional student and his friends navigate campus life.</td>
+    </tr>
+    <tr>
+      <td>s6</td>
+      <td>TV Show</td>
+      <td>Midnight Mass</td>
+      <td>Mike Flanagan</td>
+      <td>Kate Siegel, Zach Gilford, Hamish Linklater, Henry Thomas, Kristin Lehman, Samantha Sloyan, Igby Rigney, Rahul Kohli, Annarah Cymone, Annabeth Gish, Alex Essoe, Rahul Abburi, Matt Biedel, Michael Trucco, Crystal Balint, Louis Oliver</td>
+      <td>NaN</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>TV-MA</td>
+      <td>1 Season</td>
+      <td>TV Dramas, TV Horror, TV Mysteries</td>
+      <td>The arrival of a charismatic young priest brings glorious miracles, ominous mysteries and renewed religious fervor to a dying town desperate to believe.</td>
+    </tr>
+    <tr>
+      <td>s7</td>
+      <td>Movie</td>
+      <td>My Little Pony: A New Generation</td>
+      <td>Robert Cullen, José Luis Ucha</td>
+      <td>Vanessa Hudgens, Kimiko Glenn, James Marsden, Sofia Carson, Liza Koshy, Ken Jeong, Elizabeth Perkins, Jane Krakowski, Michael McKean, Phil LaMarr</td>
+      <td>NaN</td>
+      <td>September 24, 2021</td>
+      <td>2021</td>
+      <td>PG</td>
+      <td>91 min</td>
+      <td>Children &amp; Family Movies</td>
+      <td>Equestria's divided. But a bright-eyed hero believes Earth Ponies, Pegasi and Unicorns should be pals — and, hoof to heart, she’s determined to prove it.</td>
+    </tr>
+    <tr>
+      <td>s8</td>
+      <td>Movie</td>
+      <td>Sankofa</td>
+      <td>Haile Gerima</td>
+      <td>Kofi Ghanaba, Oyafunmike Ogunlano, Alexandra Duah, Nick Medley, Mutabaruka, Afemo Omilami, Reggie Carter, Mzuri</td>
+      <td>United States, Ghana, Burkina Faso, United Kingdom, Germany, Ethiopia</td>
+      <td>September 24, 2021</td>
+      <td>1993</td>
+      <td>TV-MA</td>
+      <td>125 min</td>
+      <td>Dramas, Independent Movies, International Movies</td>
+      <td>On a photo shoot in Ghana, an American model slips back in time, becomes enslaved on a plantation and bears witness to the agony of her ancestral past.</td>
+    </tr>
+  </tbody>
+</table>
+    </section>
+
+    <section>
+      <h2>3. Step 2: Pre-process The Data</h2>
+      <p>Cleaning operations performed: removed duplicate IDs, filled missing text fields with meaningful labels, converted date values into date objects, extracted year/month added, extracted primary country and primary genre, and converted duration into a numeric field where possible.</p>
+      <div class="grid two">
+        <div class="panel">
+          <h3>Before Preprocessing</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rows</th>
+      <th>columns</th>
+      <th>duplicate_show_ids</th>
+      <th>missing_values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>8807</td>
+      <td>12</td>
+      <td>0</td>
+      <td>4307</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+        <div class="panel">
+          <h3>After Preprocessing</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rows</th>
+      <th>columns</th>
+      <th>duplicate_show_ids</th>
+      <th>missing_values_in_original_columns</th>
+      <th>misplaced_durations_fixed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>8807</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+      </div>
+      <h3>Missing Values Before Cleaning</h3>
+      <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>column</th>
+      <th>missing_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>show_id</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>director</td>
+      <td>2634</td>
+    </tr>
+    <tr>
+      <td>cast</td>
+      <td>825</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>831</td>
+    </tr>
+    <tr>
+      <td>date_added</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>release_year</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>rating</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>listed_in</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+    </section>
+
+    <section>
+      <h2>4. Step 3: Analytical Operations</h2>
+      <p>The selected operations focus on content mix, countries, ratings, genres, release trends, and additions to Netflix over time.</p>
+      <div class="grid two">
+        <div class="panel">
+          <h3>Top Countries</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>country</th>
+      <th>title_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>United States</td>
+      <td>3211</td>
+    </tr>
+    <tr>
+      <td>India</td>
+      <td>1008</td>
+    </tr>
+    <tr>
+      <td>Unknown</td>
+      <td>831</td>
+    </tr>
+    <tr>
+      <td>United Kingdom</td>
+      <td>628</td>
+    </tr>
+    <tr>
+      <td>Canada</td>
+      <td>271</td>
+    </tr>
+    <tr>
+      <td>Japan</td>
+      <td>259</td>
+    </tr>
+    <tr>
+      <td>France</td>
+      <td>213</td>
+    </tr>
+    <tr>
+      <td>South Korea</td>
+      <td>212</td>
+    </tr>
+    <tr>
+      <td>Spain</td>
+      <td>181</td>
+    </tr>
+    <tr>
+      <td>Mexico</td>
+      <td>134</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+        <div class="panel">
+          <h3>Top Genres</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>genre</th>
+      <th>title_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>International Movies</td>
+      <td>2752</td>
+    </tr>
+    <tr>
+      <td>Dramas</td>
+      <td>2427</td>
+    </tr>
+    <tr>
+      <td>Comedies</td>
+      <td>1674</td>
+    </tr>
+    <tr>
+      <td>International TV Shows</td>
+      <td>1351</td>
+    </tr>
+    <tr>
+      <td>Documentaries</td>
+      <td>869</td>
+    </tr>
+    <tr>
+      <td>Action &amp; Adventure</td>
+      <td>859</td>
+    </tr>
+    <tr>
+      <td>TV Dramas</td>
+      <td>763</td>
+    </tr>
+    <tr>
+      <td>Independent Movies</td>
+      <td>756</td>
+    </tr>
+    <tr>
+      <td>Children &amp; Family Movies</td>
+      <td>641</td>
+    </tr>
+    <tr>
+      <td>Romantic Movies</td>
+      <td>616</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="panel">
+          <h3>Ratings</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rating</th>
+      <th>title_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TV-MA</td>
+      <td>3207</td>
+    </tr>
+    <tr>
+      <td>TV-14</td>
+      <td>2160</td>
+    </tr>
+    <tr>
+      <td>TV-PG</td>
+      <td>863</td>
+    </tr>
+    <tr>
+      <td>R</td>
+      <td>799</td>
+    </tr>
+    <tr>
+      <td>PG-13</td>
+      <td>490</td>
+    </tr>
+    <tr>
+      <td>TV-Y7</td>
+      <td>334</td>
+    </tr>
+    <tr>
+      <td>TV-Y</td>
+      <td>307</td>
+    </tr>
+    <tr>
+      <td>PG</td>
+      <td>287</td>
+    </tr>
+    <tr>
+      <td>TV-G</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <td>NR</td>
+      <td>80</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+        <div class="panel">
+          <h3>Recent Release Years</h3>
+          <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>release_year</th>
+      <th>title_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2021</td>
+      <td>592</td>
+    </tr>
+    <tr>
+      <td>2020</td>
+      <td>953</td>
+    </tr>
+    <tr>
+      <td>2019</td>
+      <td>1030</td>
+    </tr>
+    <tr>
+      <td>2018</td>
+      <td>1147</td>
+    </tr>
+    <tr>
+      <td>2017</td>
+      <td>1032</td>
+    </tr>
+    <tr>
+      <td>2016</td>
+      <td>902</td>
+    </tr>
+    <tr>
+      <td>2015</td>
+      <td>560</td>
+    </tr>
+    <tr>
+      <td>2014</td>
+      <td>352</td>
+    </tr>
+    <tr>
+      <td>2013</td>
+      <td>288</td>
+    </tr>
+    <tr>
+      <td>2012</td>
+      <td>237</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. Step 4: Visual Analysis</h2>
+      
+      <div class="chart">
+        <h3>Movies vs TV Shows</h3>
+        <img src="charts/content_type_distribution.png" alt="Movies vs TV Shows">
+      </div>
+      
+      <div class="chart">
+        <h3>Top 10 Producing Countries</h3>
+        <img src="charts/top_countries.png" alt="Top 10 Producing Countries">
+      </div>
+      
+      <div class="chart">
+        <h3>Top 10 Genres</h3>
+        <img src="charts/top_genres.png" alt="Top 10 Genres">
+      </div>
+      
+      <div class="chart">
+        <h3>Most Common Ratings</h3>
+        <img src="charts/top_ratings.png" alt="Most Common Ratings">
+      </div>
+      
+      <div class="chart">
+        <h3>Release Trend Since 2000</h3>
+        <img src="charts/release_trend_since_2000.png" alt="Release Trend Since 2000">
+      </div>
+      
+      <div class="chart">
+        <h3>Netflix Additions by Year and Type</h3>
+        <img src="charts/additions_by_year_type.png" alt="Netflix Additions by Year and Type">
+      </div>
+      
+    </section>
+
+    <section>
+      <h2>6. Step 5: Front-End Output Screenshots</h2>
+      <p>This HTML file is the front-end presentation of the analytical results. The charts above can be used directly as output screenshots for submission.</p>
+      <p class="small">Generated files are saved in the output folder: cleaned CSV, charts, summary tables, and this report.</p>
+    </section>
+
+    <section>
+      <h2>7. Conclusion</h2>
+      <ul>
+        
+        <li>The dataset contains 8,807 records, which is above the required 3,000-record minimum.</li>
+        
+        <li>Movies dominate the catalog with 6,131 titles, compared with 2,676 TV shows.</li>
+        
+        <li>The United States is the leading primary country with 3,211 titles, followed by India with 1,008.</li>
+        
+        <li>The most common genre label is International Movies, appearing in 2,752 records.</li>
+        
+        <li>The most frequent content rating is TV-MA, with 3,207 titles.</li>
+        
+        <li>Netflix additions increased strongly after 2015, showing rapid catalog expansion in the later years of the dataset.</li>
+        
+        <li>Preprocessing improved usability by replacing blank categorical values, extracting clean date parts, and creating analysis-friendly country, genre, and duration fields.</li>
+        
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
+        
